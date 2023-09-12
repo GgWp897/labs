@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get list of VK friends</title>
+</head>
+<body>
+    <button id="getFriendsButton">Друзья</button>
+    <ul id="friendsList"></ul>
+
+    <script>
+        function getFriends() {
+            const user_id = "346160999"; 
+            const access_token = "vk1.a.8hayspv450p78KCnnegywqLgaXs74GuchgE1K2hVxsQEfTQ1-gqkUFIIGIE-dA7NXKzdhh_59teF5SaZcLwgK3_YvI3yx8UfRguVbuybJsNO0rdGK998PR3jr86Pz-92YCN8tvb9ZNfBrBH8ssGTjhEFqZDsA0XNnSY-SWCCvLDWkfOmt0dEhxDVl6gMOZcm&expires_in=86400"
+            const apiUrl = `https://api.vk.com/method/friends.get?user_id=${user_id}&access_token=${access_token}&v=5.81`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert("Ошибка при получении списка друзей: " + data.error.error_msg);
+                    } else {
+                        const friendsList = document.getElementById("friendsList");
+                        friendsList.innerHTML = ""; 
+
+                        data.response.items.forEach(friend => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = friend.first_name + " " + friend.last_name;
+                            friendsList.appendChild(listItem);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Произошла ошибка при выполнении запроса:", error);
+                });
+        }
+
+        document.getElementById("getFriendsButton").addEventListener("click", getFriends);
+    </script>
+</body>
+</html>
